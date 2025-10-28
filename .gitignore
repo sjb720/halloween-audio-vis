@@ -1,0 +1,44 @@
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/Assets/AssetStoreTools/
+/Assets/StreamingAssets/
+/Assets/TextMesh Pro/
+/Assets/Standard Assets/
+/Assets/ProCore/
+/Assets/Photon/
+
+# Visual Studio / Rider files
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# macOS files
+.DS_Store
+.Trashes
+*.unitypackage
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux files
+.fuse_hidden*
+
+# Other temporary files
+*.bak
+*.orig
+*.meta.orig
+
+# Optional: ProjectSettings.asset
+# Uncomment the line below if you want to ignore ProjectSettings.asset
+# /ProjectSettings/ProjectSettings.asset
