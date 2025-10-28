@@ -8,6 +8,7 @@ public class MicrophoneRecorder : MonoBehaviour
     public float cameraShake = 10;
     public float lineOffsetY = 5;
 
+    public Light sun;
     public Transform cameraRoot;
     public AudioSource audioSource;
     public string microphoneDevice; // Optional: specify a particular microphone
@@ -16,6 +17,14 @@ public class MicrophoneRecorder : MonoBehaviour
     public LineRenderer lineRenderer;
     public int bucketSize = 4;
     public float spacing = 0.08f;
+
+    public Color[] colors;
+    int currentColor = 0;
+
+    // Decides whether we popped or not
+    public float lowThresholdHigh = 2f;
+    public float lowThresholdLow = 1f;
+    bool popped = false;
 
 
     private void Awake()
@@ -75,17 +84,37 @@ public class MicrophoneRecorder : MonoBehaviour
 
             for (int i = 0; i < averages.Length; i++)
             {
-                posArr[averages.Length - i - 1] = new Vector3(i* spacing, Mathf.Log10(averages[i] + 1) * multiplier, 0f);
-                posArr[averages.Length + i + 1] = new Vector3(-i * spacing, -Mathf.Log10(averages[i] + 1) * multiplier, 0f);
-
+                posArr[averages.Length - i - 1] = new Vector3((i* spacing) +spacing, Mathf.Log10(averages[i] + 1) * multiplier, 0f);
+                posArr[averages.Length + i + 1] = new Vector3((-i * spacing) - spacing, -Mathf.Log10(averages[i] + 1) * multiplier, 0f);
             }
 
             lineRenderer.SetPositions(posArr);
 
-
-
             lineRenderer.transform.localPosition = new Vector3(0, lineOffsetY + (overallAverage * multiplier * 10),0);
             Camera.main.transform.localPosition = new Vector3(0, 5.3f, cameraClosestDistance + (lowsAverage * multiplier * cameraShake));
+
+            print((lowsAverage * multiplier) +"");
+
+            if (lowsAverage * multiplier > lowThresholdHigh && !popped)
+            {
+                popped = true;
+
+                currentColor++;
+                if(currentColor >= colors.Length)
+                {
+                    currentColor = 0;
+                }
+
+                Color col = colors[currentColor];
+                lineRenderer.startColor = col;
+                lineRenderer.endColor = col;
+                sun.color = col;
+            }
+
+            if (lowsAverage * multiplier < lowThresholdLow && popped)
+            {
+                popped = !true;
+            }
 
             // Now, 'spectrumData' contains the frequency amplitudes.
             // You can use this data to visualize the audio spectrum.

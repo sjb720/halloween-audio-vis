@@ -387,7 +387,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 0, g: 1, b: 0.12270355, a: 1}
-  m_Intensity: 2
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -577,17 +577,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536ba61c96998a74cbe85962144448ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiplier: 1000
+  multiplier: 750
   cameraClosestDistance: 10.43
   cameraShake: 1.33
   lineOffsetY: 0
+  sun: {fileID: 410087040}
   cameraRoot: {fileID: 0}
   audioSource: {fileID: 1529883711}
   microphoneDevice: Stereo Mix (Realtek(R) Audio)
   numSamples: 2048
   lineRenderer: {fileID: 1717699653}
   bucketSize: 4
-  spacing: 0.16
+  spacing: 0.24
+  colors:
+  - {r: 0, g: 1, b: 0.116336346, a: 1}
+  - {r: 0.41509432, g: 0, b: 0.0115978485, a: 1}
+  - {r: 0.65412617, g: 0, b: 0.8207547, a: 1}
+  - {r: 1, g: 0.46619305, b: 0, a: 1}
+  lowThresholdHigh: 1.8
+  lowThresholdLow: 1.2
 --- !u!4 &1529883710
 Transform:
   m_ObjectHideFlags: 0
@@ -797,7 +805,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.024951726
+        value: 0.08536127
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -809,8 +817,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.5, g: 0, b: 0.027125359, a: 1}
-      key1: {r: 0.5, g: 0, b: 0.027125359, a: 1}
+      key0: {r: 0, g: 1, b: 0.09281945, a: 1}
+      key1: {r: 0, g: 1, b: 0.09281945, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -837,7 +845,7 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
+    numCornerVertices: 5
     numCapVertices: 0
     alignment: 0
     textureMode: 0
