@@ -58,6 +58,16 @@ public class MicrophoneRecorder : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            multiplier += 10;
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            multiplier -= 10;
+        }
+
+
         if (audioSource.isPlaying)
         {
             float overallAverage = 0;
