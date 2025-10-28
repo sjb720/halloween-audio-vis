@@ -93,8 +93,6 @@ public class MicrophoneRecorder : MonoBehaviour
             lineRenderer.transform.localPosition = new Vector3(0, lineOffsetY + (overallAverage * multiplier * 10),0);
             Camera.main.transform.localPosition = new Vector3(0, 5.3f, cameraClosestDistance + (lowsAverage * multiplier * cameraShake));
 
-            print((lowsAverage * multiplier) +"");
-
             if (lowsAverage * multiplier > lowThresholdHigh && !popped)
             {
                 popped = true;
