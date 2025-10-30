@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class MicrophoneRecorder : MonoBehaviour
@@ -7,6 +8,8 @@ public class MicrophoneRecorder : MonoBehaviour
     public float cameraClosestDistance = 5;
     public float cameraShake = 10;
     public float lineOffsetY = 5;
+
+    public float peakAverage = 0;
 
     public Light sun;
     public Transform cameraRoot;
@@ -35,6 +38,8 @@ public class MicrophoneRecorder : MonoBehaviour
 
     void Start()
     {
+        InvokeRepeating("Resync", 10, 10);
+        InvokeRepeating("HardResync", 1000, 1000);
         // Get the default microphone device if not specified
         if (string.IsNullOrEmpty(microphoneDevice) && Microphone.devices.Length > 0)
         {
@@ -44,7 +49,7 @@ public class MicrophoneRecorder : MonoBehaviour
         if (!string.IsNullOrEmpty(microphoneDevice))
         {
             // Start recording from the microphone
-            audioSource.clip = Microphone.Start(microphoneDevice, true, 10, AudioSettings.outputSampleRate);
+            audioSource.clip = Microphone.Start(microphoneDevice, true, 60, AudioSettings.outputSampleRate);
 
             audioSource.loop = true; // Loop the audio clip
             while (!(Microphone.GetPosition(microphoneDevice) > 0)) { } // Wait until recording starts
@@ -58,6 +63,10 @@ public class MicrophoneRecorder : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            HardResync();
+        }
+
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             multiplier += 10;
@@ -100,6 +109,14 @@ public class MicrophoneRecorder : MonoBehaviour
 
             lineRenderer.SetPositions(posArr);
 
+            float lineWidth = 0.04f + ((lowsAverage * multiplier / 3f) * 0.16f);
+            lineRenderer.startWidth = lineWidth;
+            lineRenderer.endWidth = lineWidth;
+
+            if(lowsAverage * multiplier > peakAverage) {
+                peakAverage = lowsAverage * multiplier;
+            }
+
             lineRenderer.transform.localPosition = new Vector3(0, lineOffsetY + (overallAverage * multiplier * 10),0);
             Camera.main.transform.localPosition = new Vector3(0, 5.3f, cameraClosestDistance + (lowsAverage * multiplier * cameraShake));
 
@@ -139,4 +156,36 @@ public class MicrophoneRecorder : MonoBehaviour
             Microphone.End(microphoneDevice);
         }
     }
+
+    void OnApplicationFocus(bool focusStatus)
+{
+    if (focusStatus)
+    {
+        Resync();
+    }
+}
+
+void Resync() {
+    Debug.Log("Resyncing mic");
+
+    Debug.Log("source time: " + (float)Microphone.GetPosition(microphoneDevice) / (float)AudioSettings.outputSampleRate  + "seconds");
+
+    Debug.Log("source time: " + audioSource.time + "seconds");
+
+    float t = (float) Microphone.GetPosition(microphoneDevice) / (float) AudioSettings.outputSampleRate;
+    audioSource.time = t;
+}
+
+void HardResync() {
+    Microphone.End(microphoneDevice);
+    audioSource.Stop();
+
+    audioSource.clip = Microphone.Start(microphoneDevice, true, 60, AudioSettings.outputSampleRate);
+
+            audioSource.loop = true; // Loop the audio clip
+            while (!(Microphone.GetPosition(microphoneDevice) > 0)) { } // Wait until recording starts
+            audioSource.Play(); // Play the recorded audio
+
+}
+
 }
